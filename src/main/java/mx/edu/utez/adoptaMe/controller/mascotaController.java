@@ -14,14 +14,16 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping(value = "/mascotas")
 public class mascotaController {
-    @GetMapping(value = { "/listarAll","/listarAll/{esAdopcion}", "/listar/{tipoMascotaRuta}", "listar/{tipoMascota}/{esAdopcion}"})
+    @GetMapping(value = { "/listarAll","/listarAll/{esAdopcion}", "/listar/{tipoMascotaRuta}", "listar/{tipoMascotaRuta}/{esAdopcion}"})
     public String listar(@PathVariable("tipoMascotaRuta") Optional<String> tipoMascotaRuta, @PathVariable("esAdopcion") Optional<Boolean> esAdopcion,  Model modelo){
 
         LinkedList<mascotaModel> mascotasLista = new LinkedList<>();
-        mascotasLista.add(new mascotaModel("Dachshund",2,"Perro","perro","perro.jpg",true));
+        mascotasLista.add(new mascotaModel("Dachshund",2,"Perro","perro","perro.jpeg",true));
         mascotasLista.add(new mascotaModel("Bills",10,"Gato egipcio","gato","bills.jpg",false));
         mascotasLista.add(new mascotaModel("Willson",4,"Gato de elrubius","gato","wilson.jpg",true));
         mascotasLista.add(new mascotaModel("Aleman",7,"Perro Aleman","perro","pastorAl.jpg",false));
+        mascotasLista.add(new mascotaModel("Gato generico",6,"Gato generico","gato","gatogen.jpg",true));
+        mascotasLista.add(new mascotaModel("Perrito god",8,"Perro gods god","perro","god.jpeg",true));
 
         LinkedList<mascotaModel> sublistaPerros =
                 mascotasLista.stream().filter(m -> m.getTipoMascota().equals("perro"))
@@ -67,8 +69,8 @@ public class mascotaController {
             }else {
                 if (tipoMascotaRuta.get().equals("perros")){
                     System.out.println("Todos perros");
-                    modelo.addAttribute("subListaPerritos",sublistaPerros);
                     modelo.addAttribute("status", false);
+                    modelo.addAttribute("subListaPerritos",sublistaPerros);
                     return "pets/dogs";
                 }else {
                     System.out.println("Todos gatos");
