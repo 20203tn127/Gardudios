@@ -38,11 +38,13 @@
 
 }
 
-
+body {
+    background-color: #eee
+}
 
     </style>
 
-    
+
 </head>
 <body>
 
@@ -70,32 +72,92 @@
 
 <div class="container">
 
-    <div class="col-12">
-        <div class="row">
-
-
-
-
+    <div class="row">
+        <div class="col-6">
             <div class="form-check form-switch mt-3">
                 <input class="form-check-input" type="checkbox" id="isAdoption" th:onclick="state()" th:checked="${status}">
                 <label class="form-check-label" for="isAdoption">En adopcion</label>
             </div>
+        </div>
+        <div class="col-6">
+            <!-- Button trigger modal -->
+            <button type="button" class="mt-3 btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+                Añadir mascota :D
+            </button>
+        </div>
+    </div>
 
-            <div class="card m-3 shadow p-3 mb-5" style="width: 18rem;" th:each="tmpList: ${ListaMascotas}" >
-                <img th:src="@{/images/{i} (i=${tmpList.imagen})}" width="170" height="170" class="card-img-top">
-                <div class="card-body ">
-                    <h5 class="card-title badge cafe4" th:text="${tmpList.nombre}"></h5>
-                    <p class="card-title badge cafe2" th:text="${tmpList.tipoMascota}"></p>
-                    <p class="card-text badge cafe3" th:text="${tmpList.disponibleAdopcion} ? 'En adopción' : 'No en adopción'"></p>
-                </div>
+    <div class="row">
+        <div class="card m-3 shadow p-3 mb-5" style="width: 18rem;" th:each="tmpList: ${ListaMascotas}" >
+            <img th:src="@{/images/{i} (i=${tmpList.imagen})}" width="170" height="170" class="card-img-top">
+            <div class="card-body ">
+                <h5 class="card-title badge cafe4" th:text="${tmpList.nombre}"></h5>
+                <p class="card-title badge cafe2" th:text="${tmpList.tipoMascota}"></p>
+                <p class="card-text badge cafe3" th:text="${tmpList.disponibleAdopcion} ? 'En adopción' : 'No en adopción'"></p>
             </div>
-
         </div>
     </div>
 
 
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalRegistro" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Registrar una mascota</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form th:action="@{/mascotas/save}" method="POST">
+
+                        <div class="mb-3">
+                            <label for="nombreMascota" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombreMascota" name="nombreMascota">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edadMascota" class="form-label">Edad</label>
+                            <input type="number" class="form-control" id="edadMascota" name="edadMascota">
+                        </div>
+                        <div class="mb-3">
+                            <label for="desMascota" class="form-label">Descripcion</label>
+                            <input type="text" class="form-control" id="desMascota" name="desMascota">
+                        </div>
+                        <div class="mb-3">
+                            <input type="hidden" class="form-control" id="tipoMascota" name="tipoMascota" value="perro">
+                        </div>
+                        <div class="mb-3">
+                            <label for="imagenMascota" class="form-label">Imagen</label>
+                            <input type="text" class="form-control" id="imagenMascota" name="imagenMascota">
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="disponibleAdopcionTrue" value="true" name="disponibleAdopcionTrue">
+                            <label class="form-check-label" for="disponibleAdopcionTrue">Adopcion</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="disponibleAdopcionFalse" value="false" name="disponibleAdopcionFalse">
+                            <label class="form-check-label" for="disponibleAdopcionFalse">No Adopcion</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-primary">Registrar</button>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 </div>
+
 
 
 
@@ -116,7 +178,7 @@
     }
 
 
- 
+
 </script>
 
 

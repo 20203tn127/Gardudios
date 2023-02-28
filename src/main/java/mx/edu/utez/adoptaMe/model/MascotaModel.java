@@ -1,7 +1,7 @@
 package mx.edu.utez.adoptaMe.model;
 
 
-public class mascotaModel {
+public class MascotaModel {
 
     String nombre;
     Integer edad;
@@ -11,10 +11,10 @@ public class mascotaModel {
     Boolean disponibleAdopcion;
 
 
-    public mascotaModel() {
+    public MascotaModel() {
     }
 
-    public mascotaModel(String nombre, Integer edad, String descripcion, String tipoMascota, String imagen, Boolean disponibleAdopcion) {
+    public MascotaModel(String nombre, Integer edad, String descripcion, String tipoMascota, String imagen, Boolean disponibleAdopcion) {
         this.nombre = nombre;
         this.edad = edad;
         this.descripcion = descripcion;

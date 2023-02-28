@@ -1,11 +1,9 @@
 package mx.edu.utez.adoptaMe.controller;
 
-import mx.edu.utez.adoptaMe.model.mascotaModel;
+import mx.edu.utez.adoptaMe.model.MascotaModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.Optional;
@@ -13,23 +11,21 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/mascotas")
-public class mascotaController {
+public class MascotaController {
+
+
+
     @GetMapping(value = { "/listarAll","/listarAll/{esAdopcion}", "/listar/{tipoMascotaRuta}", "listar/{tipoMascotaRuta}/{esAdopcion}"})
     public String listar(@PathVariable("tipoMascotaRuta") Optional<String> tipoMascotaRuta, @PathVariable("esAdopcion") Optional<Boolean> esAdopcion,  Model modelo){
 
-        LinkedList<mascotaModel> mascotasLista = new LinkedList<>();
-        mascotasLista.add(new mascotaModel("Dachshund",2,"Perro","perro","perro.jpeg",true));
-        mascotasLista.add(new mascotaModel("Bills",10,"Gato egipcio","gato","bills.jpg",false));
-        mascotasLista.add(new mascotaModel("Willson",4,"Gato de elrubius","gato","wilson.jpg",true));
-        mascotasLista.add(new mascotaModel("Aleman",7,"Perro Aleman","perro","pastorAl.jpg",false));
-        mascotasLista.add(new mascotaModel("Gato generico",6,"Gato generico","gato","gatogen.jpg",true));
-        mascotasLista.add(new mascotaModel("Perrito god",8,"Perro gods god","perro","god.jpeg",true));
+        MetodosMascotas mascotas = new MetodosMascotas();
+        LinkedList<MascotaModel> mascotasLista = mascotas.regresarMascotas();
 
-        LinkedList<mascotaModel> sublistaPerros =
+        LinkedList<MascotaModel> sublistaPerros =
                 mascotasLista.stream().filter(m -> m.getTipoMascota().equals("perro"))
                         .collect(Collectors.toCollection(LinkedList::new));
 
-        LinkedList<mascotaModel> sublistaGatos =
+        LinkedList<MascotaModel> sublistaGatos =
                 mascotasLista.stream().filter(m -> m.getTipoMascota().equals("gato"))
                         .collect(Collectors.toCollection(LinkedList::new));
 
@@ -41,7 +37,7 @@ public class mascotaController {
             if (esAdopcion.isPresent()){
                 if (tipoMascotaRuta.isPresent() && tipoMascotaRuta.get().equals("perros")){;
                     System.out.println("Todos perros son para adopcion - true ");
-                    LinkedList<mascotaModel> sublistaPerrosAdopcion =
+                    LinkedList<MascotaModel> sublistaPerrosAdopcion =
                             sublistaPerros.stream().filter(m -> m.getDisponibleAdopcion().equals(true))
                                     .collect(Collectors.toCollection(LinkedList::new));
                     modelo.addAttribute("subListaPerritos",sublistaPerrosAdopcion);
@@ -50,7 +46,7 @@ public class mascotaController {
 
                 }else if (tipoMascotaRuta.isPresent() && tipoMascotaRuta.get().equals("gatos")){
                     System.out.println("Todos gatos son para adopcion - true");
-                    LinkedList<mascotaModel> sublistaGatosAdopcion =
+                    LinkedList<MascotaModel> sublistaGatosAdopcion =
                             sublistaGatos.stream().filter(m -> m.getDisponibleAdopcion().equals(true))
                                     .collect(Collectors.toCollection(LinkedList::new));
                     modelo.addAttribute("subListaGatitos",sublistaGatosAdopcion);
@@ -59,7 +55,7 @@ public class mascotaController {
 
                 }else {
                     System.out.println("Todas las mascotas son para adopcion - true");
-                    LinkedList<mascotaModel> sublistaAdopcionGeneral =
+                    LinkedList<MascotaModel> sublistaAdopcionGeneral =
                             mascotasLista.stream().filter(m -> m.getDisponibleAdopcion().equals(true))
                                     .collect(Collectors.toCollection(LinkedList::new));
                     modelo.addAttribute("ListaMascotas", sublistaAdopcionGeneral);
@@ -89,7 +85,29 @@ public class mascotaController {
 
     }
 
-
-
+    @PostMapping("/save")
+    public String guardarMascota(
+            @RequestParam("nombreMascota") String nombreNew,
+            @RequestParam("edadMascota") Integer edadNew,
+            @RequestParam(name = "desMascota", required = false) String descripcionNew,
+            @RequestParam("tipoMascota") String tipoMascotaNew,
+            @RequestParam("imagenMascota") String imagenMascotaNew,
+            @RequestParam(name = "disponibleAdopcionTrue",required = false) Boolean disponibleAdopcionTrue,
+            @RequestParam(name = "disponibleAdopcionFalse",required = false) Boolean disponibleAdopcionFalse,
+            Model modelo){
+            MetodosMascotas mascotas = new MetodosMascotas();
+            LinkedList<MascotaModel> mascotasLista = mascotas.regresarMascotas();
+            MascotaModel mascotaNew = new MascotaModel();
+            mascotaNew.setNombre(nombreNew);
+            mascotaNew.setEdad(edadNew);
+            mascotaNew.setDescripcion(descripcionNew);
+            mascotaNew.setTipoMascota(tipoMascotaNew);
+            mascotaNew.setImagen(imagenMascotaNew);
+            mascotaNew.setDisponibleAdopcion(disponibleAdopcionTrue);
+            mascotaNew.setDisponibleAdopcion(disponibleAdopcionFalse);
+            mascotasLista.add(mascotaNew);
+            modelo.addAttribute("ListaMascotas", mascotasLista);
+            return "pets/home";
+    }
 
 }
